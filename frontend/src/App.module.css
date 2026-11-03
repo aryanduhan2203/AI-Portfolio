@@ -1,0 +1,46 @@
+.main {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 64rem;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 5rem 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .main {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+  }
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 48rem;
+  margin-left: auto;
+  margin-right: auto;
+  gap: 2.25rem;
+}
+
+.subtitle {
+  font-family: 'Geist', sans-serif;
+  font-size: 1rem;
+  color: var(--on-surface-variant);
+  max-width: 42rem;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+@media (min-width: 640px) {
+  .subtitle {
+    font-size: 1.125rem;
+  }
+}

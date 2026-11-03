@@ -1,0 +1,252 @@
+/* ============================================================
+   Global Design Tokens & Base Styles
+   ============================================================ */
+
+:root {
+  /* Material-You Warm Dark Palette */
+  --primary-fixed: #ffdbc9;
+  --on-surface-variant: #a6a19a;
+  --error-container: #93000a;
+  --surface-container-high: #2b2a28;
+  --tertiary-container: #aa8c6b;
+  --tertiary-fixed-dim: #e3c19d;
+  --tertiary-fixed: #ffddb9;
+  --surface-container-lowest: #0f0e0d;
+  --on-primary-fixed-variant: #753400;
+  --inverse-on-surface: #32302f;
+  --on-tertiary: #412c13;
+  --outline-variant: #2a2724;
+  --on-secondary-fixed: #141f08;
+  --on-error-container: #ffdad6;
+  --secondary-fixed: #d9e8c4;
+  --on-tertiary-fixed-variant: #5a4227;
+  --surface-container: #181615;
+  --surface: #141312;
+  --on-secondary-container: #acba98;
+  --background: #121110;
+  --primary: #ffb68c;
+  --on-primary-container: #491d00;
+  --secondary-fixed-dim: #bdcca9;
+  --on-tertiary-fixed: #291802;
+  --surface-container-highest: #363433;
+  --inverse-primary: #994703;
+  --surface-variant: #22201e;
+  --secondary-container: #3e4b30;
+  --tertiary: #e3c19d;
+  --on-secondary: #28341b;
+  --on-primary: #532200;
+  --surface-tint: #ffb68c;
+  --error: #ffb4ab;
+  --on-tertiary-container: #3a260d;
+  --on-background: #f4f1ec;
+  --on-surface: #f4f1ec;
+  --surface-bright: #3b3937;
+  --secondary: #bdcca9;
+  --surface-container-low: #161514;
+  --on-secondary-fixed-variant: #3e4b30;
+  --on-error: #690005;
+  --inverse-surface: #f4f1ec;
+  --outline: #6b655f;
+  --surface-dim: #121110;
+  --on-primary-fixed: #321200;
+  --primary-container: #d97736;
+  --primary-fixed-dim: #ffb68c;
+}
+
+/* ============================================================
+   Reset & Base
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overscroll-behavior: none;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--on-surface);
+  font-family: 'Geist', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================
+   Scrollbar
+   ============================================================ */
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* ============================================================
+   Selection
+   ============================================================ */
+
+::selection {
+  background-color: var(--primary-container);
+  color: #fff;
+}
+
+/* ============================================================
+   Typography Utilities
+   ============================================================ */
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.font-serif {
+  font-family: 'Newsreader', serif;
+}
+
+.font-sans {
+  font-family: 'Geist', sans-serif;
+}
+
+/* ============================================================
+   Entrance Animations
+   ============================================================ */
+
+.fade-slide-init {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.header-slide-init {
+  opacity: 0;
+  transform: translateY(-12px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.fade-slide-in {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* ============================================================
+   Typewriter Cursor
+   ============================================================ */
+
+@keyframes cursor-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  95% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 2.5px;
+  height: 0.9em;
+  margin-left: 3px;
+  vertical-align: -0.06em;
+  background-color: #d97736;
+  animation: cursor-blink 0.85s ease-in-out infinite;
+  transition: opacity 0.4s ease;
+}
+
+.typewriter-cursor.cursor-hidden {
+  opacity: 0 !important;
+  animation: none !important;
+  visibility: hidden;
+  width: 0;
+  margin-left: 0;
+}
+
+/* ============================================================
+   Reduced Motion Support
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-slide-init,
+  .header-slide-init {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .typewriter-cursor {
+    display: none !important;
+  }
+  .editorial-loader {
+    display: none !important;
+  }
+}
+
+/* ============================================================
+   Material Symbols
+   ============================================================ */
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+/* ============================================================
+   Layout Helpers
+   ============================================================ */
+
+.container {
+  max-width: 64rem; /* 1024px */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* ============================================================
+   Chip / Button Resets
+   ============================================================ */
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

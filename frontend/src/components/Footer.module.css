@@ -1,0 +1,40 @@
+.footer {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  border-top: 1px solid var(--outline-variant);
+  background-color: var(--background);
+}
+
+.inner {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.75rem;
+  font-family: 'Geist', sans-serif;
+  color: var(--on-surface-variant);
+}
+
+@media (min-width: 640px) {
+  .inner {
+    flex-direction: row;
+  }
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.link {
+  transition: color 0.15s;
+}
+
+.link:hover {
+  color: var(--on-surface);
+}

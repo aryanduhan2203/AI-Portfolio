@@ -1,0 +1,47 @@
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
+}
+
+.primaryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  border-radius: 9999px;
+  background-color: var(--on-surface);
+  color: var(--surface);
+  font-family: 'Geist', sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: background-color 0.15s;
+  cursor: pointer;
+  border: none;
+}
+
+.primaryBtn:hover {
+  background-color: #ffffff;
+}
+
+.secondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 9999px;
+  background-color: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  color: var(--on-surface);
+  font-family: 'Geist', sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: border-color 0.15s;
+}
+
+.secondaryBtn:hover {
+  border-color: var(--outline);
+}
