@@ -1,0 +1,50 @@
+{
+  "name": "Aryan Duhan",
+  "email": null,
+  "phone": null,
+  "total_experience_years": null,
+  "skills": [
+    "C++",
+    "Python",
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Next.js",
+    "Node.js",
+    "Express",
+    "FastAPI",
+    "MongoDB",
+    "PostgreSQL",
+    "Supabase",
+    "AWS",
+    "Docker",
+    "Nginx",
+    "S3",
+    "SQS",
+    "Razorpay",
+    "JWT",
+    "Git",
+    "scikit-learn",
+    "pandas",
+    "NumPy"
+  ],
+  "experiences": [
+    {
+      "company": "Delaine Technologies Pvt. Ltd.",
+      "role": "Full Stack Development Intern",
+      "duration": "May-July 2026",
+      "description": "Worked on an admin blog management system with Supabase RPC authentication and ReactQuill, a multilingual corporate platform with i18n, static site generation and Google Analytics 4, and a healthcare tourism platform built with Next.js and TypeScript.",
+      "skills_used": ["Next.js", "TypeScript", "Supabase", "ReactQuill", "i18n", "SSG", "Google Analytics 4"]
+    }
+  ],
+  "education": [
+    "B.Tech in Computer Science and Engineering, specializing in Cyber Physical Systems, VIT Chennai; CGPA 8.33; expected graduation 2027."
+  ],
+  "projects": [
+    "QuickDine: full-stack food delivery platform using Next.js, React, TypeScript, Supabase, Razorpay, Docker and AWS.",
+    "Skill Bridge: mentorship and career platform; Aryan built the backend and MongoDB database as part of a team.",
+    "Predictive Maintenance for Military Equipment: Random Forest model predicting turbofan Remaining Useful Life from CMAPSS FD001 sensor data; R² 0.70 and MAE about 26.7 cycles.",
+    "Project Management Backend (Projevx): Node.js and Express REST API with MongoDB, JWT authentication and project-level role-based access control."
+  ],
+  "certifications": []
+}

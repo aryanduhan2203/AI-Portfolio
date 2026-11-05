@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import LoaderBar from './components/LoaderBar'
 import Header from './components/Header'
 import HeroBadge from './components/HeroBadge'
@@ -8,6 +8,7 @@ import ChatCard from './components/ChatCard'
 import ChatPage from './components/ChatPage'
 import Footer from './components/Footer'
 import { useTypewriterEntrance } from './hooks/useTypewriterEntrance'
+import { checkBackendHealth, type BackendHealth } from './api/chat'
 import styles from './App.module.css'
 
 type View = 'hero' | 'chat'
@@ -15,6 +16,31 @@ type View = 'hero' | 'chat'
 export default function App() {
   const [view, setView] = useState<View>('hero')
   const [initialQuestion, setInitialQuestion] = useState<string | null>(null)
+  const [backendStatus, setBackendStatus] = useState<BackendHealth>('loading')
+
+  useEffect(() => {
+    let active = true
+    let retryTimer: ReturnType<typeof setTimeout> | undefined
+
+    const warmBackend = async () => {
+      try {
+        const status = await checkBackendHealth()
+        if (!active) return
+        setBackendStatus(status)
+        if (status === 'loading') retryTimer = setTimeout(warmBackend, 3000)
+      } catch {
+        if (!active) return
+        setBackendStatus('offline')
+        retryTimer = setTimeout(warmBackend, 10000)
+      }
+    }
+
+    void warmBackend()
+    return () => {
+      active = false
+      if (retryTimer) clearTimeout(retryTimer)
+    }
+  }, [])
 
   const prefersReducedMotion =
     typeof window !== 'undefined'
@@ -88,7 +114,12 @@ export default function App() {
             <HeroActions visible={actionsVisible} onChatClick={() => openChatPage()} />
 
             {/* Quick inline chat widget */}
-            <ChatCard visible={chatVisible} inputRef={chatInputRef} onAsk={openChatPage} />
+            <ChatCard
+              visible={chatVisible}
+              inputRef={chatInputRef}
+              onAsk={openChatPage}
+              backendStatus={backendStatus}
+            />
           </div>
         </main>
       )}

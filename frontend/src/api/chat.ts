@@ -2,6 +2,19 @@
 
 export const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? '/api').replace(/\/$/, '')
 
+export type BackendHealth = 'ready' | 'loading' | 'offline'
+
+/** Ping the API as the portfolio opens, warming a sleeping free-tier service. */
+export async function checkBackendHealth(): Promise<BackendHealth> {
+  const res = await fetch(`${API_BASE}/`, { cache: 'no-store' })
+  if (!res.ok) return 'offline'
+
+  const data = await res.json() as { status?: string; resume_loaded?: boolean }
+  if (data.status === 'ok' || data.status === 'ready' || data.resume_loaded) return 'ready'
+  if (data.status === 'loading') return 'loading'
+  return 'offline'
+}
+
 export type ProjectLink = {
   name: string
   url: string

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { getSuggestions } from '../api/chat'
+import { getSuggestions, type BackendHealth } from '../api/chat'
 import styles from './ChatCard.module.css'
 
 const PLACEHOLDER_PROMPTS = [
@@ -14,9 +14,10 @@ interface ChatCardProps {
   visible: boolean
   inputRef: React.RefObject<HTMLInputElement>
   onAsk: (question: string) => void
+  backendStatus: BackendHealth
 }
 
-export default function ChatCard({ visible, inputRef, onAsk }: ChatCardProps) {
+export default function ChatCard({ visible, inputRef, onAsk, backendStatus }: ChatCardProps) {
   const [query, setQuery] = useState('')
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [placeholder, setPlaceholder] = useState(PLACEHOLDER_PROMPTS[0])
@@ -104,7 +105,7 @@ export default function ChatCard({ visible, inputRef, onAsk }: ChatCardProps) {
           </div>
           <div className={styles.statusRow}>
             <span className={styles.statusDot} />
-            <span>Online</span>
+            <span>{backendStatus === 'ready' ? 'Ready' : backendStatus === 'loading' ? 'Connecting…' : 'Unavailable'}</span>
           </div>
         </div>
 

@@ -5,7 +5,6 @@ import os
 import re
 import threading
 import time
-import asyncio
 from collections import defaultdict, deque
 from collections.abc import Iterator
 from contextlib import asynccontextmanager
@@ -17,7 +16,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, StreamingResponse
 from groq import Groq, RateLimitError
 from pydantic import BaseModel, Field
-from pypdf import PdfReader
 
 load_dotenv(Path(__file__).with_name(".env"))
 
@@ -32,6 +30,7 @@ TEMPERATURE = 0.2
 
 # ── Resume root path ───────────────────────────────────────────
 RESUME_PATH = Path(__file__).parent / "Aryan's resume.pdf"
+RESUME_DATA_PATH = Path(__file__).with_name("resume_data.json")
 CHAT_LIMIT = 4
 CHAT_LIMIT_WINDOW_SECONDS = 60 * 60
 _chat_requests: dict[str, deque[float]] = defaultdict(deque)
@@ -165,16 +164,6 @@ _resume_status = "loading"
 _resume_error: str | None = None
 
 # ── Helpers ────────────────────────────────────────────────────
-def read_pdf(file_path: Path) -> str:
-    reader = PdfReader(file_path)
-    text = ""
-    for page in reader.pages:
-        page_text = page.extract_text()
-        if page_text:
-            text += page_text + "\n"
-    return text
-
-
 ABOUT_PATH = Path(__file__).with_name("about.md")
 
 
@@ -309,53 +298,6 @@ def enforce_chat_limit(request: Request) -> None:
         timestamps.append(now)
 
 
-def parse_resume(resume_text: str) -> Resume:
-    """Call LLM to extract structured Resume from raw PDF text."""
-    if client is None:
-        raise RuntimeError("GROQ_API_KEY is not configured.")
-    schema = Resume.model_json_schema()
-    system_prompt = f"""
-You are an expert resume parser.
-Extract information from the resume based on its meaning, not only exact section headings.
-
-Different resumes may use different headings:
-- Experience / Professional Experience / Work History / Employment / Internships
-
-Skills may appear in the Skills section, work experience, internships, or projects.
-
-Return ONLY valid JSON matching this schema exactly:
-{json.dumps(schema, indent=2)}
-
-Rules:
-1. Do not invent information.
-2. If a value is not available, return null.
-3. If a list has no information, return an empty list.
-4. Include internships inside experiences.
-5. Extract skills mentioned anywhere in the resume.
-"""
-    user_prompt = f"Parse the following resume:\n\n{resume_text}"
-
-    for attempt in range(5):
-        try:
-            response = client.chat.completions.create(
-                model=MODEL,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user",   "content": user_prompt},
-                ],
-                response_format={"type": "json_object"},
-            )
-            break
-        except RateLimitError:
-            if attempt == 4:
-                raise
-            time.sleep(10 * (attempt + 1))
-
-    raw = response.choices[0].message.content
-    data = json.loads(raw)
-    return Resume(**data)
-
-
 def candidate_system_prompt(resume: Resume) -> str:
     """Build a concise system prompt grounded in the cached resume."""
     return f"""
@@ -472,18 +414,16 @@ RULES:
         return list(FALLBACK_SUGGESTIONS)
 
 
-# ── Lifespan: parse resume once at startup ─────────────────────
-async def initialize_resume() -> None:
+# ── Lifespan: load prepared candidate data without an LLM call ─
+def initialize_resume() -> None:
     global _resume, client, _resume_status, _resume_error
     try:
         api_key = os.getenv("GROQ_API_KEY")
         if not api_key:
-            raise RuntimeError("GROQ_API_KEY is missing. Add it to backend/.env.")
+            raise RuntimeError("GROQ_API_KEY is missing. Configure it in the backend environment.")
         client = Groq(api_key=api_key)
-        resume_text = read_pdf(RESUME_PATH)
-        if not resume_text.strip():
-            raise RuntimeError("The resume PDF contains no extractable text.")
-        _resume = await asyncio.to_thread(parse_resume, resume_text)
+        data = json.loads(RESUME_DATA_PATH.read_text(encoding="utf-8"))
+        _resume = Resume.model_validate(data)
         _resume_status = "ready"
         print(f"Resume cached — name: {_resume.name}, skills: {len(_resume.skills)}")
     except Exception as e:
@@ -494,9 +434,8 @@ async def initialize_resume() -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    task = asyncio.create_task(initialize_resume())
+    initialize_resume()
     yield
-    task.cancel()
     print("Shutting down")
 
 
